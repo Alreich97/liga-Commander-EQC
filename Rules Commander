@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liga Commander — Bracket 3 Upgraded</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dark: #8a6a1f;
+  --bg: #0d0d12;
+  --bg-card: #13131c;
+  --bg-card2: #1a1a28;
+  --red: #b03030;
+  --red-light: #e05050;
+  --text: #ddd5c0;
+  --text-muted: #8a8070;
+  --border: #2a2535;
+  --green: #3a8a5a;
+  --amber: #c0782a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  /* Añadido para navegación suave al hacer clic en el menú */
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 80px 20px 60px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--gold-dark);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse at 20% 100%, rgba(176,48,48,0.08) 0%, transparent 50%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 60px,
+      rgba(201,168,76,0.02) 60px,
+      rgba(201,168,76,0.02) 61px
+    );
+  z-index: 0;
+}
+
+.hero-inner { position: relative; z-index: 1; }
+
+.hero-badge {
+  display: inline-block;
+  border: 1px solid var(--gold-dark);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  padding: 6px 20px;
+  margin-bottom: 28px;
+}
+
+.hero h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(28px, 5vw, 56px);
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1.1;
+  text-shadow: 0 0 60px rgba(201,168,76,0.3);
+  margin-bottom: 8px;
+}
+
+.hero h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(14px, 2vw, 20px);
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat .val {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.hero-stat .lbl {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hero-divider {
+  width: 1px;
+  background: var(--border);
+  align-self: stretch;
+}
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13,13,18,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+nav ul {
+  display: inline-flex;
+  list-style: none;
+  gap: 0;
+}
+
+nav a {
+  display: block;
+  padding: 14px 16px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+nav a:hover { color: var(--gold); border-color: var(--gold); }
+
+/* CLASE ACTIVA PARA EL MENÚ DINÁMICO */
+nav a.active {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.05);
+}
+
+/* ESTILOS DE LA CALCULADORA INTERACTIVA */
+.calc-container label { 
+  display: block; 
+  margin-bottom: 10px; 
+  cursor: pointer; 
+  color: var(--text);
+  font-size: 15px;
+  transition: color 0.2s;
+}
+.calc-container label:hover { color: var(--gold-light); }
+.calc-container input[type="radio"], .calc-container input[type="checkbox"] { 
+  accent-color: var(--gold); 
+  margin-right: 10px; 
+  transform: scale(1.2);
+}
+.calc-group { 
+  margin-bottom: 24px; 
+  padding-bottom: 16px; 
+  border-bottom: 1px dashed var(--border); 
+}
+.calc-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+.calc-group h4 { 
+  color: var(--gold); 
+  font-family: 'Cinzel', serif; 
+  font-size: 15px; 
+  margin-bottom: 14px; 
+  letter-spacing: 1px;
+}
+.calc-total-box { 
+  background: rgba(201,168,76,0.05); 
+  border: 1px solid var(--gold-dark); 
+  padding: 24px; 
+  text-align: center; 
+  margin-top: 20px; 
+}
+.calc-total-box .num { 
+  display: block; 
+  font-family: 'Cinzel Decorative', serif; 
+  font-size: 42px; 
+  color: var(--gold); 
+  font-weight: 700; 
+  line-height: 1;
+  margin-bottom: 8px;
+  text-shadow: 0 0 20px rgba(201,168,76,0.3);
+}
+.calc-total-box .limite-msg { 
+  font-size: 13px; 
+  color: var(--red-light); 
+  display: none; 
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.calc-penal label { color: var(--red-light); }
+.calc-penal input[type="checkbox"] { accent-color: var(--red); }
+
+/* LAYOUT */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* SECTION */
+.section {
+  margin-top: 64px;
+  animation: fadeUp 0.5s ease both;
+  scroll-margin-top: 80px; /* Evita que el menú fijo tape el título al navegar */
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-num {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 11px;
+  color: var(--gold-dark);
+  letter-spacing: 2px;
+  min-width: 28px;
+}
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(18px, 3vw, 26px);
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--gold-dark), transparent);
+}
+
+/* SUBSECTION */
+.subsection {
+  margin-top: 32px;
+}
+
+.subsection h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-left: 12px;
+  border-left: 2px solid var(--gold-dark);
+}
+
+/* CARDS */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.card p, .card li {
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.card ul {
+  padding-left: 20px;
+}
+
+/* STAT GRID */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-card .s-val {
+  font-family: 'Cinzel', serif;
+  font-size: 24px;
+  color: var(--gold);
+  display: block;
+}
+
+.stat-card .s-lbl {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 15px;
+}
+
+thead tr {
+  background: var(--bg-card2);
+  border-bottom: 1px solid var(--gold-dark);
+}
+
+th {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 12px 16px;
+  text-align: left;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(201,168,76,0.03); }
+
+/* LOGRO CARDS */
+.logros-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.logro-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  transition: border-color 0.2s;
+}
+
+.logro-card:hover { border-color: var(--gold-dark); }
+
+.logro-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.logro-name {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.logro-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.logro-pts {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 1px;
+  margin-bottom: 12px;
+}
+
+.badge-gold { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid var(--gold-dark); }
+.badge-red { background: rgba(176,48,48,0.15); color: var(--red-light); border: 1px solid var(--red); }
+.badge-green { background: rgba(58,138,90,0.15); color: #6abf8a; border: 1px solid var(--green); }
+.badge-amber { background: rgba(192,120,42,0.15); color: #e09a5a; border: 1px solid var(--amber); }
+
+/* PENALIZACION */
+.penal-card {
+  background: var(--bg-card);
+  border-left: 3px solid var(--red);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+
+.penal-card.warn { border-left-color: var(--amber); }
+.penal-card.info { border-left-color: var(--gold-dark); }
+
+.penal-title {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.penal-card.warn .penal-title { color: #e09a5a; }
+.penal-card .penal-title { color: var(--red-light); }
+.penal-card.info .penal-title { color: var(--gold); }
+
+/* ETAPAS */
+.etapas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.etapa {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.etapa-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+}
+
+.etapa-dot.green { background: #3a8a5a; box-shadow: 0 0 12px #3a8a5a; }
+.etapa-dot.amber { background: var(--amber); box-shadow: 0 0 12px var(--amber); }
+.etapa-dot.red { background: var(--red); box-shadow: 0 0 12px var(--red); }
+
+.etapa-name {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  color: var(--gold-light);
+  margin-bottom: 4px;
+}
+
+.etapa-weeks {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.etapa-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* NOTA */
+.nota {
+  background: rgba(201,168,76,0.05);
+  border: 1px solid var(--gold-dark);
+  border-left: 3px solid var(--gold);
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 16px 0;
+  font-style: italic;
+}
+
+/* REFS */
+.refs a {
+  color: var(--gold);
+  text-decoration: none;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.refs a:hover { color: var(--gold-light); text-decoration: underline; }
+
+.refs li { margin-bottom: 8px; color: var(--text-muted); }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid var(--border);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+strong { color: var(--text); font-weight: 600; }
+
+ol { padding-left: 24px; }
+ol li { margin-bottom: 8px; }
+
+@media (max-width: 600px) {
+  .etapas { grid-template-columns: 1fr; }
+  .hero-divider { display: none; }
+  nav a { padding: 14px 10px; font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Reglamento Oficial</div>
+    <h1>Liga Commander</h1>
+    <h2>Bracket 3 — Upgraded</h2>
+    <div class="hero-meta">
+      <div class="hero-stat">
+        <span class="val">Trimestral</span>
+        <span class="lbl">Temporada</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="val">Semanal</span>
+        <span class="lbl">Frecuencia</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="val">≈12</span>
+        <span class="lbl">Fechas</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="val">70 min</span>
+        <span class="lbl">Por ronda</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="val">2</span>
+        <span class="lbl">Rondas/fecha</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#vision">Visión General</a></li>
+    <li><a href="#inscripcion">Inscripción</a></li>
+    <li><a href="#construccion">Construcción</a></li>
+    <li><a href="#prohibidas">Prohibidas</a></li>
+    <li><a href="#especiales">Cartas especiales</a></li>
+    <li><a href="#estructura">Estructura</a></li>
+    <li><a href="#puntos">Puntos</a></li>
+    <li><a href="#penalizaciones">Penalizaciones</a></li>
+    <li><a href="#mecanicas">Mecánicas</a></li>
+    <li><a href="#conducta">Conducta</a></li>
+    <li><a href="#cierre">Cierre</a></li>
+    <li><a href="#referencias">Referencias</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <!-- 1. VISIÓN GENERAL -->
+  <div class="section" id="vision">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2 class="section-title">Visión General</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <p>Esta liga se disputa en el formato <strong>Commander Multiplayer (EDH)</strong> bajo las restricciones del <strong>Bracket 3 — Upgraded</strong>, con una temporada de duración <strong>trimestral</strong> dividida en fechas <strong>semanales</strong>.</p>
+      <br>
+      <p>El objetivo es ofrecer una experiencia de juego constante, donde los puntos se acumulan semana a semana y el campeón de temporada se determina al cierre del trimestre. Se premia tanto la victoria como el juego destacado, y se fomenta la participación regular.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><span class="s-val">EDH</span><span class="s-lbl">Formato</span></div>
+      <div class="stat-card"><span class="s-val">Bracket 3</span><span class="s-lbl">Nivel</span></div>
+      <div class="stat-card"><span class="s-val">≈12</span><span class="s-lbl">Fechas totales</span></div>
+      <div class="stat-card"><span class="s-val">4</span><span class="s-lbl">Jugadores/mesa</span></div>
+      <div class="stat-card"><span class="s-val">2</span><span class="s-lbl">Rondas/fecha</span></div>
+      <div class="stat-card"><span class="s-val">70 min</span><span class="s-lbl">Por ronda</span></div>
+    </div>
+    <div class="nota">Basado en los parámetros oficiales de WotC y los lineamientos de Landfall (actualizados a octubre 2025). Sujeto a ajustes por parte del organizador.</div>
+  </div>
+
+  <!-- 2. INSCRIPCIÓN -->
+  <div class="section" id="inscripcion">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2 class="section-title">Inscripción y Participación</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>Inscripción inicial</h3>
+      <div class="card">
+        <ul>
+          <li>Los jugadores deben registrar su mazo en <strong>Moxfield</strong> y entregar el enlace al organizador antes de la primera fecha en que participen.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Incorporación tardía</h3>
+      <div class="card">
+        <p>Se permite que nuevos jugadores se unan en cualquier fecha posterior al inicio:</p>
+        <ul>
+          <li>El jugador parte con <strong>0 puntos</strong>, sin compensación por fechas previas.</li>
+          <li>Debe registrar su mazo antes de la fecha en que desee comenzar.</li>
+          <li>Queda sujeto al reglamento completo desde su primera fecha.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Modificación del mazo entre fechas</h3>
+      <div class="card">
+        <p>Los jugadores pueden <strong>modificar su mazo entre fechas</strong>, respetando las restricciones del Bracket 3 y el límite de presupuesto vigente. Cualquier modificación debe reflejarse en Moxfield antes del inicio de la siguiente fecha.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Ausencias</h3>
+      <div class="card">
+        <ul>
+          <li>Un jugador que no asista a una fecha <strong>no acumula puntos</strong> esa semana.</li>
+          <li>No hay penalización por ausencia, salvo confirmación previa sin aviso, a criterio del organizador.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 3. CONSTRUCCIÓN -->
+  <div class="section" id="construccion">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2 class="section-title">Construcción del Mazo</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>Reglas base</h3>
+      <div class="card">
+        <ul>
+          <li><strong>100 cartas</strong> exactas, incluyendo el comandante.</li>
+          <li><strong>Singleton:</strong> no puede haber dos cartas con el mismo nombre, excepto tierras básicas.</li>
+          <li>Todas las cartas deben respetar la <strong>identidad de color</strong> del comandante.</li>
+          <li><strong>Presupuesto máximo:</strong> anunciado por el organizador al inicio de cada mes en Discord. Se verifica con el precio en Moxfield al momento del registro. Las modificaciones entre fechas también deben cumplir el límite vigente.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Restricciones del Bracket 3</h3>
+      <table>
+        <thead>
+          <tr><th>Elemento</th><th>Estado</th><th>Detalle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Game Changers</strong></td><td><span style="color:#e09a5a">Limitado</span></td><td>Máximo 3 cartas de la lista oficial. Si el comandante es un Game Changer, cuenta como una.</td></tr>
+          <tr><td><strong>Combos 2 cartas (MV ≤ 6)</strong></td><td><span style="color:var(--red-light)">Prohibido</span></td><td>No pueden incluirse en el mazo. Ver §3.2a.</td></tr>
+          <tr><td><strong>Combos 2 cartas (MV ≥ 7)</strong></td><td><span style="color:#e09a5a">Limitado</span></td><td>Permitidos en el mazo. Solo ejecutables desde el turno 7 del primer jugador.</td></tr>
+          <tr><td><strong>Combos 3+ cartas</strong></td><td><span style="color:#e09a5a">Limitado</span></td><td>Permitidos en el mazo. Solo ejecutables desde el turno 7 del primer jugador.</td></tr>
+          <tr><td><strong>Negación masiva de maná</strong></td><td><span style="color:var(--red-light)">Prohibido</span></td><td>Afectar 4 o más tierras simultáneamente. Ver §3.2b.</td></tr>
+          <tr><td><strong>Turnos extra</strong></td><td><span style="color:#e09a5a">Limitado</span></td><td>Máximo 3 por partida. No encadenables. No dos consecutivos.</td></tr>
+          <tr><td><strong>Control absoluto de mesa</strong></td><td><span style="color:var(--red-light)">Prohibido</span></td><td>Antes del turno 7 del primer jugador.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="nota"><strong>Definición de combo:</strong> cualquier combinación que genere valor arbitrario (infinito) o establezca una condición de victoria inmediata. Los permanentes prerrequisito no cuentan en el MV. Verificar en commanderspellbook.com.</div>
+      <div class="nota"><strong>Negación masiva de maná:</strong> destruir, exiliar, girar, impedir enderezar, cambiar controlador, forzar sacrificio o alterar la generación de 4 o más tierras. Las sinergias intencionales (ej: Mycosynth Lattice + Vandalblast) también están prohibidas.</div>
+      <div class="nota"><strong>Control de mesa:</strong> situación donde las acciones de los oponentes son irrelevantes antes del turno 7. Incluye lockouts y acumulación opresiva de recursos en los primeros turnos.</div>
+    </div>
+
+    <div class="subsection">
+      <h3>Lista de Game Changers</h3>
+      <div class="card">
+        <p>Consultar en Scryfall con el filtro: <code style="background:var(--bg-card2);padding:2px 8px;border-radius:2px;color:var(--gold);font-family:monospace">is:gamechangercommander</code></p>
+        <p style="margin-top:8px">Es <strong>responsabilidad del jugador</strong> verificar que su mazo cumple la restricción antes de cada fecha.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 4. PROHIBIDAS -->
+  <div class="section" id="prohibidas">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2 class="section-title">Lista de Cartas Prohibidas</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <p>Se aplica la <strong>ban list oficial de Commander vigente a la fecha de cada jornada</strong>. Es responsabilidad del jugador verificar su mazo antes de cada fecha.</p>
+      <br>
+      <ul>
+        <li>La lista se actualiza periódicamente por el Commander Format Panel de Wizards of the Coast.</li>
+        <li>Si una carta es prohibida entre fechas, <strong>debe retirarse antes de la siguiente jornada</strong>.</li>
+        <li>Incluir una carta prohibida implica <strong>game loss inmediato</strong> y reemplazo obligatorio por una tierra básica.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5. CARTAS ESPECIALES -->
+  <div class="section" id="especiales">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2 class="section-title">Cartas Especiales</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>Múltiples copias permitidas</h3>
+      <div class="card">
+        <p>Cartas que indican que pueden incluirse en cualquier cantidad (ej: <em>Relentless Rats</em>, <em>Shadowborn Apostle</em>) están <strong>permitidas</strong>. Si figuran en la lista de Game Changers, <strong>cada copia cuenta individualmente</strong> hacia el límite de 3.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Companion</h3>
+      <div class="card">
+        <p>Las cartas Companion están <strong>permitidas</strong> siguiendo las reglas oficiales de Commander: deben respetar la identidad de color y su requisito de construcción. Actúan como carta 101 y no ocupan los 100 slots del mazo. Si el Companion figura en la lista de Game Changers, <strong>cuenta como uno de los 3 permitidos</strong>.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 6. ESTRUCTURA -->
+  <div class="section" id="estructura">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2 class="section-title">Estructura de la Liga</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>Etapas de la temporada</h3>
+      <div class="etapas">
+        <div class="etapa">
+          <div class="etapa-dot green"></div>
+          <div class="etapa-name">Apertura</div>
+          <div class="etapa-weeks">Semanas 1–4</div>
+          <div class="etapa-desc">Inicio de temporada. Todos parten con 0 puntos.</div>
+        </div>
+        <div class="etapa">
+          <div class="etapa-dot amber"></div>
+          <div class="etapa-name">Desarrollo</div>
+          <div class="etapa-weeks">Semanas 5–8</div>
+          <div class="etapa-desc">Se activa el logro Most Wanted en todas las mesas.</div>
+        </div>
+        <div class="etapa">
+          <div class="etapa-dot red"></div>
+          <div class="etapa-name">Cierre</div>
+          <div class="etapa-weeks">Semanas 9–12</div>
+          <div class="etapa-desc">Última oportunidad de sumar puntos. Se determina el campeón.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Gestión del tiempo</h3>
+      <div class="card">
+        <p>Al agotarse el tiempo de ronda (70 minutos):</p>
+        <ol style="margin-top:12px">
+          <li>Se completa el turno del jugador activo.</li>
+          <li>Se realiza <strong>un turno adicional por cada jugador</strong> restante en mesa.</li>
+          <li>Si hay una pila en desarrollo, los jugadores pueden interactuar con ella; una vez resuelta, la partida termina.</li>
+          <li>Si la mesa <strong>no definió un ganador</strong>, no se otorgan los 3 puntos de victoria. Los puntos base se distribuyen según el orden de eliminación.</li>
+          <li>Todos los jugadores que sigan en pie obtienen automáticamente el logro <strong>Superviviente</strong> (+1 pt).</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Concesiones</h3>
+      <div class="card">
+        <p>Queda <strong>prohibido conceder</strong> durante el desarrollo de una partida. Si un jugador no puede continuar, individualmente, debe notificar al organizador para realizar un <strong>retiro voluntario</strong> de esa jornada.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 7. PUNTOS -->
+  <div class="section" id="puntos">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2 class="section-title">Sistema de Puntos</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="nota">Los puntos se acumulan a lo largo de toda la temporada. Al cierre de la última fecha, el jugador con mayor puntaje total es declarado <strong>Campeón de Temporada</strong>.</div>
+
+    <div class="subsection">
+      <h3>Puntos base por resultado de mesa</h3>
+      <table>
+        <thead><tr><th>Resultado</th><th>Puntos</th></tr></thead>
+        <tbody>
+          <tr><td>Ganador de mesa</td><td style="color:var(--gold);font-family:'Cinzel',serif;font-size:18px">3 pts</td></tr>
+          <tr><td>Segundo en sobrevivir</td><td style="color:var(--gold);font-family:'Cinzel',serif;font-size:18px">2 pts</td></tr>
+          <tr><td>Tercero en sobrevivir</td><td style="color:var(--gold);font-family:'Cinzel',serif;font-size:18px">1 pt</td></tr>
+          <tr><td>Primero en ser eliminado</td><td style="color:var(--text-muted);font-family:'Cinzel',serif;font-size:18px">0 pts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <h3>Logros de 1 punto</h3>
+      <div class="logros-grid">
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Primera Sangre</div>
+            <div class="logro-desc">Ser el primer jugador en eliminar a un oponente en la partida.</div>
+          </div>
+          <div class="logro-pts">+1</div>
+        </div>
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Robo Masivo</div>
+            <div class="logro-desc">Robar 5 o más cartas en un solo turno.</div>
+          </div>
+          <div class="logro-pts">+1</div>
+        </div>
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Superviviente</div>
+            <div class="logro-desc">Seguir en pie cuando la mesa no define ganador por tiempo. Todos los jugadores aún activos lo obtienen.</div>
+          </div>
+          <div class="logro-pts">+1</div>
+        </div>
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Muerte por Comandante</div>
+            <div class="logro-desc">Eliminar a un oponente acumulando 21 o más puntos de daño de combate con el propio comandante. Solo se otorga una vez por mesa.</div>
+          </div>
+          <div class="logro-pts">+1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Logros de 2 puntos</h3>
+      <div class="logros-grid">
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Voltear la Mesa</div>
+            <div class="logro-desc">Eliminar a 2 o más jugadores en un mismo turno.</div>
+          </div>
+          <div class="logro-pts">+2</div>
+        </div>
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Victoria Alternativa</div>
+            <div class="logro-desc">Ganar mediante una condición de victoria alternativa (ej: Thassa's Oracle, Felidar Sovereign, Approach of the Second Sun).</div>
+          </div>
+          <div class="logro-pts">+2</div>
+        </div>
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Most Wanted</div>
+            <div class="logro-desc">Eliminar al jugador designado Most Wanted de la mesa. Ver §9.</div>
+          </div>
+          <div class="logro-pts">+2</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Logros especiales — Cierre de cada mes</h3>
+      <div class="nota">Estos logros se otorgan al finalizar cada mes, pudiendo obtenerse hasta <strong>3 veces</strong> en el trimestre.</div>
+      <div class="logros-grid">
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Mazo más Original</div>
+            <div class="logro-desc">Otorgado por el organizador al mazo más creativo, temático o innovador del mes. Solo una vez por mes.</div>
+          </div>
+          <div class="logro-pts">+2</div>
+        </div>
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Jugador más Querido</div>
+            <div class="logro-desc">Votación exclusiva entre los jugadores de la liga al cierre de cada mes. Cada jugador vota por un compañero distinto a sí mismo. En caso de empate, todos los empatados reciben los puntos.</div>
+          </div>
+          <div class="logro-pts">+2</div>
+        </div>
+        <div class="logro-card">
+          <div class="logro-icon"></div>
+          <div class="logro-body">
+            <div class="logro-name">Asistencia Perfecta</div>
+            <div class="logro-desc">Otorgado automáticamente al jugador que haya asistido a todas las fechas del mes sin excepción. Si varios jugadores lo obtienen, todos reciben los puntos.</div>
+          </div>
+          <div class="logro-pts">+2</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Límite de puntos por ronda</h3>
+      <table>
+        <thead><tr><th>Situación</th><th>Máximo acumulable</th></tr></thead>
+        <tbody>
+          <tr><td>Ganador de mesa</td><td style="color:var(--gold);font-family:'Cinzel',serif">7 puntos</td></tr>
+          <tr><td>Jugador que no ganó</td><td style="color:var(--gold);font-family:'Cinzel',serif">4 puntos</td></tr>
+        </tbody>
+      </table>
+      <div class="nota">El puntaje que exceda el límite no se contabiliza. Los logros aleatorios de ronda cuentan con un máximo de 3 puntos acumulables por ese concepto por jornada.</div>
+    </div>
+
+    <!-- INICIO: CALCULADORA INTERACTIVA -->
+    <div class="subsection" id="calculadora">
+      <h3>Calculadora de Ronda</h3>
+      <div class="card calc-container">
+        <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 14px;">Utiliza esta herramienta para simular y calcular automáticamente tus puntos de la fecha, respetando los topes oficiales.</p>
+        
+        <div class="calc-group">
+          <h4>1. Resultado de Mesa (Elige uno)</h4>
+          <label><input type="radio" name="calc-place" value="3"> Ganador de mesa (+3 pts)</label>
+          <label><input type="radio" name="calc-place" value="2"> Segundo en sobrevivir (+2 pts)</label>
+          <label><input type="radio" name="calc-place" value="1"> Tercero en sobrevivir (+1 pt)</label>
+          <label><input type="radio" name="calc-place" value="0" checked> Primero en ser eliminado (0 pts)</label>
+        </div>
+
+        <div class="calc-group">
+          <h4>2. Logros Básicos (+1 pt)</h4>
+          <label><input type="checkbox" class="calc-ach" value="1"> Primera Sangre</label>
+          <label><input type="checkbox" class="calc-ach" value="1"> Robo Masivo</label>
+          <label><input type="checkbox" class="calc-ach" value="1"> Superviviente</label>
+          <label><input type="checkbox" class="calc-ach" value="1"> Muerte por Comandante</label>
+        </div>
+
+        <div class="calc-group">
+          <h4>3. Logros Épicos (+2 pts)</h4>
+          <label><input type="checkbox" class="calc-ach" value="2"> Voltear la Mesa</label>
+          <label><input type="checkbox" class="calc-ach" value="2"> Victoria Alternativa</label>
+          <label><input type="checkbox" class="calc-ach" value="2"> Most Wanted (Eliminación de la recompensa)</label>
+        </div>
+
+        <div class="calc-group calc-penal">
+          <h4>4. Penalizaciones (-1 pt)</h4>
+          <label><input type="checkbox" class="calc-pen" value="1"> Falta leve / Actitud antideportiva</label>
+          <label><input type="checkbox" class="calc-pen" value="1"> Falta leve adicional</label>
+        </div>
+
+        <div class="calc-total-box">
+          <span style="font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted);">Total de la Ronda</span>
+          <span class="num" id="calc-total-score">0</span>
+          <span class="limite-msg" id="calc-limit-msg">Límite de puntos alcanzado</span>
+        </div>
+      </div>
+    </div>
+    <!-- FIN: CALCULADORA INTERACTIVA -->
+
+  </div>
+
+  <!-- 8. PENALIZACIONES -->
+  <div class="section" id="penalizaciones">
+    <div class="section-header">
+      <span class="section-num">§ 08</span>
+      <h2 class="section-title">Penalizaciones</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="penal-card">
+      <div class="penal-title">Game Loss inmediato — Infracciones de construcción</div>
+      <table>
+        <thead><tr><th>Infracción</th><th>Consecuencia</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Combo prohibido</strong> — combo de 2 cartas con MV ≤ 6</td><td>Game loss. Reemplazar carta por tierra básica para continuar.</td></tr>
+          <tr><td><strong>Negación masiva de maná</strong> — cartas o sinergias prohibidas</td><td>Game loss. Reemplazar cartas ilegales por tierras básicas.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="penal-card warn">
+      <div class="penal-title">Retiro de mesa con 0 puntos</div>
+      <table>
+        <thead><tr><th>Infracción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Combo antes de tiempo</strong> — ejecutar un combo antes del turno 7 del primer jugador</td></tr>
+          <tr><td><strong>Eliminación antes de tiempo</strong> — eliminar a un oponente antes de su turno 6 mediante combo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="penal-card warn">
+      <div class="penal-title">Pérdida del turno extra</div>
+      <table>
+        <thead><tr><th>Infracción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Encadenamiento</strong> — intentar jugar dos turnos extra consecutivos</td></tr>
+          <tr><td><strong>Exceso</strong> — intentar tomar más de 3 turnos extra en la misma partida</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="penal-card info">
+      <div class="penal-title">Pérdida de puntos de victoria — "No es tu lugar"</div>
+      <p>Ganar por combo en el turno 6 o antes → los 3 puntos de victoria <strong>no se otorgan</strong>. El jugador conserva únicamente los puntos de logros positivos acumulados, con un máximo de 4 pts.</p>
+    </div>
+
+    <div class="penal-card warn">
+      <div class="penal-title">Falta leve — (−1 punto acumulable)</div>
+      <p><strong>Actitud antideportiva</strong> — insultos, malos modos o presión indebida hacia otros jugadores o el juez. Ver escala de sanciones en §10.</p>
+    </div>
+
+    <div class="nota">Los puntos negativos pueden dejar a un jugador en negativo en la tabla general. Los turnos extra no se contabilizan para la penalización de combo/eliminación antes de tiempo. En caso de ambigüedad, se aplica interpretación restrictiva en favor del espíritu del Bracket 3.</div>
+
+  </div>
+
+  <!-- 9. MECÁNICAS -->
+  <div class="section" id="mecanicas">
+    <div class="section-header">
+      <span class="section-num">§ 09</span>
+      <h2 class="section-title">Mecánicas Especiales</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>Most Wanted</h3>
+      <div class="card">
+        <p>Al inicio de cada ronda, el organizador designa en cada mesa al jugador con mayor puntaje acumulado en la temporada como <strong>Most Wanted</strong>.</p>
+        <br>
+        <ul>
+          <li>Se determina por los <strong>puntos totales de la temporada</strong>, no por la fecha o mesa actual.</li>
+          <li>Es un título <strong>por mesa</strong>: cada mesa tiene su propio Most Wanted.</li>
+          <li>El jugador que lo elimine obtiene <strong>+2 puntos</strong> (logro).</li>
+          <li>En caso de empate, <strong>todos los empatados</strong> son Most Wanted; eliminar a cualquiera otorga el punto.</li>
+          <li>En la <strong>primera ronda de la primera fecha</strong>, este logro no aplica.</li>
+          <li>El Most Wanted <strong>no pierde puntos</strong> ni recibe penalización por su designación.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 10. CONDUCTA -->
+  <div class="section" id="conducta">
+    <div class="section-header">
+      <span class="section-num">§ 10</span>
+      <h2 class="section-title">Conducta y Deportividad</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="nota">La liga busca ser un espacio de competencia sana y entretenida. Se espera que todos los participantes actúen con respeto, honestidad y deportividad en todo momento.</div>
+
+    <div class="subsection">
+      <h3>Principios generales</h3>
+      <div class="card">
+        <ul>
+          <li>Tratar a todos los jugadores, jueces y organizadores con <strong>respeto y cortesía</strong>.</li>
+          <li>Jugar de forma <strong>honesta y transparente</strong>: anunciar acciones claramente, no ocultar información pública.</li>
+          <li>Aceptar las decisiones del juez con <strong>compostura</strong>. Las apelaciones deben dirigirse al organizador.</li>
+          <li>Mantener el área de juego <strong>ordenada y limpia</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Comportamientos prohibidos</h3>
+      <table>
+        <thead><tr><th>Comportamiento</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Insultos o agresiones</strong></td><td>Lenguaje ofensivo, intimidación o agresión verbal o física</td></tr>
+          <tr><td><strong>Presión indebida</strong></td><td>Coaccionar a otros jugadores en sus decisiones de juego</td></tr>
+          <tr><td><strong>Stalling deliberado</strong></td><td>Ralentizar intencionalmente el juego para agotar el tiempo</td></tr>
+          <tr><td><strong>Kingmaking</strong></td><td>Ver §10.3</td></tr>
+          <tr><td><strong>Concesiones estratégicas</strong></td><td>Conceder para beneficiar a un jugador específico</td></tr>
+          <tr><td><strong>Información falsa</strong></td><td>Declarar incorrectamente el estado del juego, vida o cartas</td></tr>
+          <tr><td><strong>Uso de dispositivos</strong></td><td>Consultar el móvil durante la partida sin autorización</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <h3>Kingmaking</h3>
+      <div class="card">
+        <p>Se considera <strong>kingmaking</strong> cualquier jugada que intencionalmente beneficie a otro jugador para que obtenga la victoria o un logro, sin que el propio jugador obtenga un beneficio razonable.</p>
+        <br>
+        <ul>
+          <li>Sancionable con aviso formal hasta suspensión de fecha o descalificación de temporada.</li>
+          <li>En casos ambiguos, el juez evaluará si la jugada tiene justificación razonable dentro del estado de la partida.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Escala de sanciones por conducta</h3>
+      <table>
+        <thead><tr><th>Gravedad</th><th>Sanción</th></tr></thead>
+        <tbody>
+          <tr><td>Primera infracción leve</td><td>Aviso formal</td></tr>
+          <tr><td>Segunda infracción leve</td><td>−1 punto</td></tr>
+          <tr><td>Infracción grave</td><td>Suspensión de una fecha</td></tr>
+          <tr><td>Infracción muy grave</td><td>Descalificación de la temporada</td></tr>
+        </tbody>
+      </table>
+      <div class="nota">Toda sanción es declarada exclusivamente por el juez o el organizador. El organizador tiene la facultad de escalar cualquier sanción según la gravedad del caso.</div>
+    </div>
+
+  </div>
+
+  <!-- 11. CIERRE -->
+  <div class="section" id="cierre">
+    <div class="section-header">
+      <span class="section-num">§ 11</span>
+      <h2 class="section-title">Cierre de Temporada y Campeón</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="subsection">
+      <h3>Clasificación final</h3>
+      <div class="card">
+        <p>Al término de la última fecha del trimestre, se suma el total de puntos acumulados por cada jugador en todas las fechas y logros mensuales disputados. El jugador con mayor puntaje total es declarado <strong>Campeón de Temporada</strong>.</p>
+        <br>
+        <p>Al cierre del trimestre <strong>no se otorgan logros adicionales</strong>. Los únicos logros especiales de la temporada son los entregados al cierre de cada mes (ver §7).</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Desempates</h3>
+      <div class="card">
+        <ol>
+          <li>Mayor puntaje obtenido en el <strong>último mes</strong>.</li>
+          <li>Mayor número de <strong>victorias de mesa</strong> en la temporada.</li>
+          <li>Si aún hay empate, el título y premio se <strong>comparten</strong> entre los jugadores empatados.</li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 12. REFERENCIAS -->
+  <div class="section" id="referencias">
+    <div class="section-header">
+      <span class="section-num">§ 12</span>
+      <h2 class="section-title">Referencias</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="card refs">
+      <ul style="list-style:none;padding:0">
+        <li><a href="https://mtgcommander.net/index.php/rules/" target="_blank">mtgcommander.net</a> — Reglas oficiales de Commander</li>
+        <li><a href="https://www.mtglandfall.com/parametros-bracket-3/" target="_blank">mtglandfall.com</a> — Parámetros Bracket 3 Landfall</li>
+        <li><a href="https://commanderspellbook.com/" target="_blank">commanderspellbook.com</a> — Verificación de combos</li>
+        <li><a href="https://scryfall.com/search?q=is:gamechangercommander" target="_blank">Scryfall</a> — Lista de Game Changers (<code style="font-family:monospace;color:var(--gold)">is:gamechangercommander</code>)</li>
+        <li><a href="https://www.moxfield.com" target="_blank">moxfield.com</a> — Registro de mazos</li>
+        <li><a href="https://magic.wizards.com/en/formats/commander" target="_blank">magic.wizards.com</a> — Brackets oficiales (beta)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+Liga Commander — Bracket 3 Upgraded &nbsp;|&nbsp; Reglamento Oficial &nbsp;|&nbsp; Sujeto a ajustes por el organizador
+</footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    
+    // --- 1. LÓGICA DE LA CALCULADORA DE PUNTOS ---
+    const calcInputs = document.querySelectorAll('.calc-container input');
+    
+    function calculateScore() {
+      // Obtener posición (3, 2, 1, 0)
+      const placementStr = document.querySelector('input[name="calc-place"]:checked')?.value || "0";
+      const placement = parseInt(placementStr);
+      const isWinner = (placement === 3);
+
+      // Sumar logros
+      let achPoints = 0;
+      document.querySelectorAll('.calc-ach:checked').forEach(cb => achPoints += parseInt(cb.value));
+
+      // Sumar penalizaciones
+      let penPoints = 0;
+      document.querySelectorAll('.calc-pen:checked').forEach(cb => penPoints += parseInt(cb.value));
+
+      // Cálculo bruto
+      let total = placement + achPoints - penPoints;
+      
+      // Aplicar límites
+      const maxPts = isWinner ? 7 : 4;
+      const limitMsg = document.getElementById('calc-limit-msg');
+
+      if (total > maxPts) {
+        total = maxPts;
+        limitMsg.style.display = 'block';
+        limitMsg.textContent = `¡Tope alcanzado! (Máximo ${maxPts} pts ${isWinner ? 'por ganar' : 'sin ganar'})`;
+      } else {
+        limitMsg.style.display = 'none';
+      }
+
+      // Actualizar UI
+      document.getElementById('calc-total-score').textContent = total;
+    }
+
+    // Escuchar cambios en los inputs
+    calcInputs.forEach(input => input.addEventListener('change', calculateScore));
+    // Calcular estado inicial
+    calculateScore();
+
+
+    // --- 2. LÓGICA DE SCROLLSPY (RESALTADO DEL MENÚ) ---
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('nav a');
+
+    window.addEventListener('scroll', () => {
+      let currentSectionId = '';
+      
+      // Encontrar la sección actual basada en el scroll
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - 150)) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      // Actualizar los enlaces de navegación
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('active');
+          // Scrollear el menú horizontalmente si el item activo se oculta (para móviles)
+          link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+    });
+
+  });
+</script>
+
+</body>
+</html>
